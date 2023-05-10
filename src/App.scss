@@ -1,0 +1,25 @@
+body {
+  background: radial-gradient(farthest-side at 50% 50%, #47576f 0%, #101d32 100%);
+  @apply w-full min-h-[100vh] h-full;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+  background-color: #17212b;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: #17212b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #242f3d;
+  border: 2px solid #242f3d;
+  border-radius: 10px;
+}
