@@ -63,7 +63,7 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
                   <div className={`btn-left ${playStatus && '!text-white/[0.5]'}`} onClick={handleMin}>
                     min
                   </div>
-                  <div className={`btn-right ${playStatus && '!text-white/[0.5]'}`} onClick={handlePlus}>
+                  <div className={`btn-right ${playStatus && '!text-white/[0.5]'}`} onClick={handleMinus}>
                     -
                   </div>
                 </div>
@@ -94,7 +94,7 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
           </div>
           <div className="modal-amount-input-btn-group">
             <div className="modal-amount-input-btn-inner">
-              <div className="group-btn" onClick={handleMin}>
+              <div className="group-btn" onClick={handleMinus}>
                 -
               </div>
               <div className="group-btn" onClick={handlePlus}>
