@@ -55,7 +55,7 @@
     }
 
     .game-landscape-setting-info {
-      font-size: 28px;
+      font-size: 6vw;
       width: 100%;
       height: 100%;
       flex-direction: row;
@@ -63,36 +63,29 @@
       align-items: center;
       padding: 1em 0;
       .game-landscape-setting-info-inner {
-        border: 0.0625em solid;
+        border: 0.0625em solid #213447 98.59%;
         background: radial-gradient(70.75% 78.33% at 50% 21.67%,rgba(130,167,223,.5) 0%,rgba(3,6,11,.145) 100%);
-        border-image-source: linear-gradient(1.66deg,#819fba -95.76%,#213447 98.59%);
         border-radius: 1.5em;
         box-shadow: inset 0 -0.125em 0.375em rgba(118,157,216,.3), inset 0 0.25em 0.5em rgba(4,9,17,.85);
-
         min-width: 8.125em;
         min-height: 1.625em;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        gap: 1.25em;
-        padding: 0.25em 0.625em;
-        display: flex;
+        gap: 0.5em;
+        padding: 0.25em 0.6em;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-self: center;
         position: relative;
 
         .setting-item {
-          flex-direction: row;
+          display: flex;
           justify-content: center;
           align-items: center;
-          gap: 0.375em;
-          display: flex;
+          gap: 0.2em;
           .setting-icon {
-            color: #ffc020;
             text-shadow: 0 0.0625em 0.125em rgba(0,0,0,.35);
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            font-size: .75em;
-            display: flex;
+            img {
+              width: 0.8em;
+            }
           }
           .setting-value {
             text-align: center;
@@ -116,11 +109,10 @@
           transform: translate(-50%,-50%);
         }
       }
-
     }
 
     .game-landscape-card-group {
-      @apply grid w-[22em] h-[22em] gap-[0.02em] sm:gap-[0.025em] text-[3.2vw] md:text-[2.8vw] slg:text-[20px] xl:text-[26px] 2xl:text-[28px];
+      @apply grid w-[22em] h-[22em] gap-[0.02em] sm:gap-[0.025em] text-[4vw] slg:text-[24px] xl:text-[26px] 2xl:text-[28px];
     }
 
     .game-landscape-size {
@@ -176,9 +168,26 @@
     }
 
     .mobile-game-controller {
-      @apply flex-col gap-[2vw] pt-[8vw];
-      .bottom-controller {
-        @apply flex justify-center items-center gap-[10px] w-full pt-[4vw] text-[4vw] slg:text-[20px];
+      @apply flex slg:hidden flex-col gap-[2vw] pt-[8vw];
+      .profit-list-container {
+        @apply flex w-full;
+        .history {
+          @apply w-full h-full relative z-[2];
+          &:before {
+            box-shadow: 0.125em 0.125em 0.25em rgba(255, 255, 255, .15), -0.125em -0.125em 0.375em rgba(0, 0, 0, .75);
+            @apply content-[""] opacity-[0.35] bg-black/[0.1] rounded-[0.75em] absolute top-0 bottom-0 right-0 left-0;
+          }
+
+          .history-inner {
+            @apply grid grid-cols-8 gap-[0.2em] w-full h-full px-[0.5em] min-h-[1.6em];
+          }
+        }
+      }
+      .amount-controller {
+        @apply pt-[10vw];
+      }
+      .btn-controller {
+        @apply flex justify-center items-center gap-[0.8em] pt-[4vw] text-[4vw];
       }
     }
 

@@ -4,7 +4,7 @@
     @apply flex justify-center items-center w-full my-[8px] relative;
     > span {
         text-shadow: 0 0.0625em 0.125em rgba(0, 0, 0, .35);
-        @apply text-[.625em] text-center font-[700] leading-[.625em];
+        @apply text-[.8em] text-center font-[700] leading-[.625em];
     }
 }
 .history-item_active {

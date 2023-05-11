@@ -7,12 +7,14 @@ import AmountBox from '../../components/AmountBox';
 import BetButton from '../../components/BetButton';
 import ToggleBox from '../../components/ToggleBox';
 import ProfitBox from '../../components/ProfitBox';
+import SettingBtn from '../../components/SettingBtn';
+import Modal from '../../components/Modal';
+import GridIcon from '../../assets/images/grid_icon.svg';
+import CricketIcon from '../../assets/images/cricket_icon.svg';
 import useStore from '../../useStore';
 import { config } from '../../config/global.const';
 import { postRequest } from '../../service';
-import Modal from '../../components/Modal';
 import './gamemanager.scss';
-import SettingBtn from '../../components/SettingBtn';
 
 const socket = io(config.wwsHost as string);
 const GameManager = () => {
@@ -315,7 +317,7 @@ const GameManager = () => {
       socket.off(`cashOut-${auth?.userid}`);
       socket.off(`error-${auth?.userid}`);
     };
-  }, []);
+  }, [auth]);
 
   return (
     <>
@@ -359,11 +361,15 @@ const GameManager = () => {
           <div className="game-landscape-setting-info flex slg:hidden">
             <div className="game-landscape-setting-info-inner">
               <div className="setting-item">
-                <div className="setting-icon"></div>
+                <div className="setting-icon">
+                  <img src={GridIcon} alt="grid" />
+                </div>
                 <div className="setting-value">{`${gridCount}X${gridCount}`}</div>
               </div>
               <div className="setting-item">
-                <div className="setting-icon"></div>
+                <div className="setting-icon">
+                  <img src={CricketIcon} alt="cricket" />
+                </div>
                 <div className="setting-value">{mineCount}</div>
               </div>
             </div>
@@ -408,8 +414,34 @@ const GameManager = () => {
             </div>
             <div className="game-landscape-size-title">Grid</div>
           </div>
-          <div className="mobile-game-controller flex slg:hidden">
-            <div className="top-controller">
+          <div className="mobile-game-controller">
+            {/* <div className="profit-list-container">
+              <div className="history">
+                <div
+                  className="history-inner"
+                  style={{
+                    gridTemplateColumns: `repeat(${
+                      profitCalcList.length > 8 ? 8 : profitCalcList.length
+                    }, minmax(0, 1fr))`
+                  }}
+                >
+                  {profitCalcTextList.slice(0, 8).map((item: any, ind: number) => {
+                    return (
+                      <ProfitBox
+                        key={ind}
+                        ind={ind}
+                        playStatus={playStatus}
+                        item={item}
+                        turboMode={turboMode}
+                        profitCalcList={profitCalcList}
+                        currentProfit={currentProfit}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div> */}
+            <div className="amount-controller">
               <AmountBox
                 isMobile="mobile"
                 minLimit={0.1}
@@ -419,14 +451,16 @@ const GameManager = () => {
                 playStatus={playStatus}
               />
             </div>
-            <div className="bottom-controller">
-              <ToggleBox
-                isMobile={true}
-                value={turboMode}
-                setValue={(e: boolean) => !playStatus && setTurboMode(e)}
-                playStatus={playStatus}
-              />
-              <div className="btn-control-action" onClick={handleBetButton}>
+            <div className="btn-controller">
+              <div>
+                <ToggleBox
+                  isMobile={true}
+                  value={turboMode}
+                  setValue={(e: boolean) => !playStatus && setTurboMode(e)}
+                  playStatus={playStatus}
+                />
+              </div>
+              <div className="grow" onClick={handleBetButton}>
                 <BetButton
                   isMobile={true}
                   profitAmount={currentProfit && (betAmount * profitCalcList[currentProfit - 1]).toFixed(2)}

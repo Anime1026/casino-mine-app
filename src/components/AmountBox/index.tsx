@@ -84,32 +84,32 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
             </div>
           </div>
         </div>
-      ) : isMobile === 'modal' ? (
-        <div className={`modal-amount-box ${playStatus && 'pointer-events-none'}`}>
-          <div className="modal-amount-input">
-            <input type="text" name="amount" value={`$ ${value}`} readOnly disabled={playStatus} />
-          </div>
-          <div className="modal-amount-input-btn" onClick={handleMin}>
-            <div className="modal-amount-input-btn-inner">min</div>
-          </div>
-          <div className="modal-amount-input-btn-group">
-            <div className="modal-amount-input-btn-inner">
-              <div className="group-btn" onClick={handleMinus}>
-                -
-              </div>
-              <div className="group-btn" onClick={handlePlus}>
-                +
-              </div>
-            </div>
-          </div>
-          <div className="modal-amount-input-btn">
-            <div className="modal-amount-input-btn-inner" onClick={handleMax}>
-              max
-            </div>
-          </div>
-        </div>
       ) : (
-        <></>
+        isMobile === 'modal' && (
+          <div className={`modal-amount-box ${playStatus && 'pointer-events-none'}`}>
+            <div className="modal-amount-input">
+              <input type="text" name="amount" value={`$ ${value}`} readOnly disabled={playStatus} />
+            </div>
+            <div className="modal-amount-input-btn" onClick={handleMin}>
+              <div className="modal-amount-input-btn-inner">min</div>
+            </div>
+            <div className="modal-amount-input-btn-group">
+              <div className="modal-amount-input-btn-inner">
+                <div className="group-btn" onClick={handleMinus}>
+                  -
+                </div>
+                <div className="group-btn" onClick={handlePlus}>
+                  +
+                </div>
+              </div>
+            </div>
+            <div className="modal-amount-input-btn">
+              <div className="modal-amount-input-btn-inner" onClick={handleMax}>
+                max
+              </div>
+            </div>
+          </div>
+        )
       )}
     </>
   );
