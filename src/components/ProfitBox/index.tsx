@@ -1,25 +1,20 @@
 import React from 'react';
 import './profitbox.scss';
 
-const ProfitBox = ({ item, ind, playStatus, turboMode, profitCalcList, currentProfit }: any) => {
+const ProfitBox = ({ self, value, turboMode, playStatus, currentProfit, currentProfitInd, profitCalcPage }: any) => {
   return (
-    <div
-      className={`history-item 
-        ${
-          currentProfit === ind &&
-          (turboMode || playStatus) &&
-          `history-item_active ${
-            profitCalcList[ind] >= 10
-              ? 'bg-yellow before:border-yellow after:border-yellow'
-              : profitCalcList[ind] >= 2
-              ? 'bg-green before:border-green after:border-green'
-              : 'bg-blue before:border-blue after:border-blue'
-          }`
-        }`}
-    >
-      <span
-        className={profitCalcList[ind] >= 10 ? 'text-yellow' : profitCalcList[ind] >= 2 ? 'text-green' : 'text-blue'}
-      >{`X${item.value}`}</span>
+    <div className="history-item">
+      <div
+        className={
+          (turboMode && currentProfitInd - 1 === self) || (currentProfitInd === self && playStatus)
+            ? `_active ${currentProfit >= 10 ? '_win3' : currentProfit >= 2 ? '_win2' : '_win1'}`
+            : ''
+        }
+      >
+        <span
+          className={currentProfit >= 10 ? 'text-yellow' : currentProfit >= 2 ? 'text-green' : 'text-blue'}
+        >{`X${value}`}</span>
+      </div>
     </div>
   );
 };
