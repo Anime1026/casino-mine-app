@@ -13,14 +13,14 @@
       @apply hidden slg:flex w-[33em];
 
       .history {
-        @apply w-full h-full relative z-[2];
+        @apply w-full h-full py-[0.3em] relative z-[2];
         &:before {
           box-shadow: 0.125em 0.125em 0.25em rgba(255, 255, 255, .15), -0.125em -0.125em 0.375em rgba(0, 0, 0, .75);
           @apply content-[""] opacity-[0.35] bg-black/[0.1] rounded-[0.75em] absolute top-0 bottom-0 right-0 left-0;
         }
 
         .history-inner {
-          @apply grid grid-cols-8 gap-[0.2em] w-full h-full px-[0.5em] min-h-[1.6em];
+          @apply grid grid-cols-8 gap-[0.2em] w-full h-full px-[0.5em];
         }
       }
     }
@@ -29,18 +29,18 @@
       @apply flex items-center justify-center gap-[1em];
       > label {
         text-shadow: -0.0625em -0.0625em 0.125em rgba(255, 255, 255, .25), 0.0625em 0.0625em 0.125em rgba(0, 0, 0, .25);
-        @apply flex items-center text-center text-white text-[14px] font-[400] leading-[0.5em] opacity-[0.75];
+        @apply hidden slg:flex items-center text-center text-white text-[0.5em] font-[400] leading-[0.5em] opacity-[0.75];
       }
 
       .balance {
-        @apply flex justify-center items-center w-[6.875em] h-[1.6em] relative;
+        @apply flex justify-center items-center w-[6.875em] h-[1.8em] slg:h-[1.6em] relative;
         &:before {
           box-shadow: 0.125em 0.125em 0.25em rgba(255, 255, 255, .15), -0.125em -0.125em 0.375em rgba(0, 0, 0, .75);
           @apply bg-black/[0.1] content-[""] opacity-[0.25] rounded-[0.75em] absolute top-0 bottom-0 right-0 left-0;
         }
 
         > span {
-          @apply text-white text-[18px] font-[700] leading-[1em] text-center;
+          @apply text-white text-[0.75em] font-[700] leading-[1em] text-center;
         }
       }
     }
@@ -246,8 +246,7 @@
   }
 
   .win_img {
-    @apply absolute w-[16.25em] h-[15em] z-[1] -top-[4.375em];
-    background-size: contain;
+    @apply absolute w-[16.25em] h-[15em] z-[1] -top-[4.375em] bg-no-repeat bg-contain;
     animation: scale .4s cubic-bezier(.175,.885,.35,1.75) -.1s;
   }
 
