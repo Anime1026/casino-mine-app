@@ -1,8 +1,7 @@
 .history-item {
-    min-width: 3em;
-    @apply flex justify-center items-center w-full min-w-[3em] relative;
+    @apply flex justify-center items-center w-full relative;
     > div {
-        @apply flex justify-center items-center w-full;
+        @apply flex justify-center items-center w-full h-full;
         transition: transform .5s linear;
         > span {
             text-shadow: 0 0.0625em 0.125em rgba(0, 0, 0, .35);

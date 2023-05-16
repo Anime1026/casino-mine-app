@@ -24,6 +24,7 @@ const GameManager = () => {
   const [totalValue, setTotalValue] = useState(auth?.balance);
   const [gridCount, setGridCount] = useState<number>(5);
   const [turboMode, setTurboMode] = useState<boolean>(false);
+  const [turboModeStart, setTurboModeStart] = useState<boolean>(false);
   const [betAmount, setBetAmount] = useState<number>(1);
   const [mineCount, setMineCount] = useState<number>(1);
   const [gridDataList, setGridDataList] = useState([]);
@@ -40,6 +41,8 @@ const GameManager = () => {
   const [currentProfit, setCurrentProfit] = useState<number>(0);
   const [currentProfitInd, setCurrentProfitInd] = useState<number>(0);
   const [profitCalcPage, setProfitCalcPage] = useState<number>(0);
+  const [maxCount, setMaxCount] = useState(8);
+
   /* variable for save the selected card index in turbo mode */
   const [turboList, setTurboList] = useState([]);
   /* variables for control the modal */
@@ -73,7 +76,8 @@ const GameManager = () => {
     return () => {
       socket.off('join');
     };
-  }, []);
+    // eslint-disable-next-line
+  }, [auth]);
   /* function for initialize cards */
   const initializeGridSystem = (count: number) => {
     let data: any = [];
@@ -110,7 +114,7 @@ const GameManager = () => {
             if (currentProfitInd > 1) {
               setCurrentProfitInd((prevState) => prevState - 1);
             } else {
-              setCurrentProfitInd(8);
+              setCurrentProfitInd(maxCount);
               setProfitCalcPage((prevState) => prevState - 1);
             }
           } else {
@@ -120,7 +124,7 @@ const GameManager = () => {
           if (turboList.length >= gridCount * gridCount - mineCount) return;
           grids[order].turbo = true;
           turbos.push(order);
-          if (currentProfitInd < 8) {
+          if (currentProfitInd < maxCount) {
             setCurrentProfitInd((prevState) => prevState + 1);
           } else {
             setCurrentProfitInd(1);
@@ -147,8 +151,12 @@ const GameManager = () => {
       alert('Please select the card');
       return false;
     }
+    if (turboModeStart) return false;
+
     if (!turboMode) setCurrentProfitInd(0);
+    else setTurboModeStart(true);
     setLoading(true);
+    setResultModalOpen(false);
     initializeGridSystem(gridCount);
     setCardLoading(true);
     setCurrentTarget(-1);
@@ -188,10 +196,10 @@ const GameManager = () => {
               userid: auth?.userid,
               profitValue:
                 profitCalcList[
-                  8 * profitCalcPage + profitCalcPage > 0
+                  maxCount * profitCalcPage + profitCalcPage > 0
                     ? currentProfitInd > 0
-                      ? 8 * profitCalcPage + currentProfitInd - 1
-                      : 8 * profitCalcPage - 1
+                      ? maxCount * profitCalcPage + currentProfitInd - 1
+                      : maxCount * profitCalcPage - 1
                     : currentProfitInd - 1
                 ]
             });
@@ -229,28 +237,32 @@ const GameManager = () => {
     return () => {
       socket.off('setProfitCalcList');
     };
+    // eslint-disable-next-line
   }, [mineCount, turboMode, gridCount]);
   /* function for get profitCalcTextList according to profit page */
   useEffect(() => {
-    setCurrentProfitCalcTextList(profitCalcTextList.slice(8 * profitCalcPage, 8 * (profitCalcPage + 1)));
-  }, [profitCalcPage]);
+    setCurrentProfitCalcTextList(profitCalcTextList.slice(maxCount * profitCalcPage, maxCount * (profitCalcPage + 1)));
+    // eslint-disable-next-line
+  }, [profitCalcPage, maxCount]);
   /* function for get currentProfit according to currentProfitInd */
   useEffect(() => {
     setCurrentProfit(
       profitCalcList[
-        8 * profitCalcPage + profitCalcPage > 0
+        maxCount * profitCalcPage + profitCalcPage > 0
           ? currentProfitInd > 0
-            ? 8 * profitCalcPage + currentProfitInd - 1
-            : 8 * profitCalcPage - 1
+            ? maxCount * profitCalcPage + currentProfitInd - 1
+            : maxCount * profitCalcPage - 1
           : currentProfitInd - 1
       ]
     );
+    // eslint-disable-next-line
   }, [currentProfitInd]);
   /* receive from backend side */
   useEffect(() => {
     socket.on(`playBet-${auth?.userid}`, async (e) => {
       if (e.turboMode) {
         let data: any = [...gridDataList];
+        // eslint-disable-next-line
         turboList.map((item: number, ind: number) => {
           if (profitCalcList[ind] >= 10) {
             data[item].card = '_win3';
@@ -262,6 +274,7 @@ const GameManager = () => {
           data[item].active = true;
         });
         if (e.mine) {
+          // eslint-disable-next-line
           e.gridSystem.map((item: number, ind: number) => {
             if (item) {
               data[ind].card = '_lose';
@@ -274,12 +287,12 @@ const GameManager = () => {
         !e.mine && setResultModalOpen(true);
         setLoading(false);
         setCardLoading(false);
-        setTimeout(() => {
-          initializeGridSystem(gridCount);
-          setResultModalOpen(false);
-          setPlayStatus(false);
-          setBtnActionStatus('start');
-        }, 2500);
+        !e.mine ? await sleep(2000) : await sleep(1500);
+        setTurboModeStart(false);
+        initializeGridSystem(gridCount);
+        setResultModalOpen(false);
+        setPlayStatus(false);
+        setBtnActionStatus('start');
       } else {
         setLoading(false);
         setCardLoading(false);
@@ -313,6 +326,7 @@ const GameManager = () => {
     socket.on(`checkMine-${auth?.userid}`, async (e) => {
       let data: any = [...gridDataList];
       if (e.mine) {
+        // eslint-disable-next-line
         e.minePlace.map((item: number) => {
           data[item].card = '_lose';
           data[item].mine = true;
@@ -332,9 +346,9 @@ const GameManager = () => {
       } else {
         data[e.index].mine = e.mine;
         data[e.index].active = true;
-        if (profitCalcList[8 * profitCalcPage + currentProfitInd] >= 10) {
+        if (profitCalcList[maxCount * profitCalcPage + currentProfitInd] >= 10) {
           data[e.index].card = '_win3';
-        } else if (profitCalcList[8 * profitCalcPage + currentProfitInd] >= 2) {
+        } else if (profitCalcList[maxCount * profitCalcPage + currentProfitInd] >= 2) {
           data[e.index].card = '_win2';
         } else {
           data[e.index].card = '_win1';
@@ -343,7 +357,7 @@ const GameManager = () => {
           setGridDataList(data);
           setCardLoading(false);
           setBtnActionStatus('cashOut');
-          if (currentProfitInd < 7) {
+          if (currentProfitInd < maxCount - 1) {
             setCurrentProfitInd((prevState) => prevState + 1);
           } else {
             setCurrentProfitInd(0);
@@ -368,7 +382,7 @@ const GameManager = () => {
         return { value: value, active: false };
       });
       setProfitCalcTextList(data);
-      setCurrentProfitCalcTextList(data.slice(8 * profitCalcPage, 8 * (profitCalcPage + 1)));
+      setCurrentProfitCalcTextList(data.slice(maxCount * profitCalcPage, maxCount * (profitCalcPage + 1)));
     });
     socket.on(`error-${auth?.userid}`, async (e) => {
       alert(e);
@@ -381,7 +395,33 @@ const GameManager = () => {
       socket.off(`setProfitCalcList-${auth?.userid}`);
       socket.off(`error-${auth?.userid}`);
     };
+    // eslint-disable-next-line
   }, [gridDataList]);
+
+  const sleep = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+  const getWidth = () => {
+    return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  };
+
+  useEffect(() => {
+    const setResponsiveness = () => {
+      if (getWidth() > 1024) {
+        setMaxCount(8);
+      } else if (getWidth() < 1024 && getWidth() > 768) {
+        setMaxCount(7);
+      } else if (getWidth() < 768 && getWidth() > 640) {
+        setMaxCount(6);
+      } else if (getWidth() < 640) {
+        setMaxCount(5);
+      }
+    };
+    setResponsiveness();
+    window.addEventListener('resize', setResponsiveness);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
@@ -407,13 +447,13 @@ const GameManager = () => {
                       currentProfit={
                         turboMode
                           ? profitCalcList[
-                              8 * profitCalcPage + profitCalcPage > 0
+                              maxCount * profitCalcPage + profitCalcPage > 0
                                 ? ind > 0
-                                  ? 8 * profitCalcPage + ind
-                                  : 8 * profitCalcPage - 1
+                                  ? maxCount * profitCalcPage + ind
+                                  : maxCount * profitCalcPage - 1
                                 : ind
                             ]
-                          : profitCalcList[8 * profitCalcPage + ind]
+                          : profitCalcList[maxCount * profitCalcPage + ind]
                       }
                       currentProfitInd={currentProfitInd}
                       profitCalcPage={profitCalcPage}
@@ -464,7 +504,7 @@ const GameManager = () => {
                     active={item.active}
                     mine={item.mine}
                     self={ind}
-                    currentProfitAmount={betAmount * profitCalcList[8 * profitCalcPage + currentProfitInd]}
+                    currentProfitAmount={betAmount * profitCalcList[maxCount * profitCalcPage + currentProfitInd]}
                     currentTarget={currentTarget}
                   />
                 </div>
@@ -509,13 +549,13 @@ const GameManager = () => {
                         currentProfit={
                           turboMode
                             ? profitCalcList[
-                                8 * profitCalcPage + profitCalcPage > 0
+                                maxCount * profitCalcPage + profitCalcPage > 0
                                   ? ind > 0
-                                    ? 8 * profitCalcPage + ind
-                                    : 8 * profitCalcPage - 1
+                                    ? maxCount * profitCalcPage + ind
+                                    : maxCount * profitCalcPage - 1
                                   : ind
                               ]
-                            : profitCalcList[8 * profitCalcPage + ind]
+                            : profitCalcList[maxCount * profitCalcPage + ind]
                         }
                         currentProfitInd={currentProfitInd}
                         profitCalcPage={profitCalcPage}

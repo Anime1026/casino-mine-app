@@ -168,7 +168,7 @@
     }
 
     .mobile-game-controller {
-      @apply flex slg:hidden flex-col gap-[2vw] pt-[8vw];
+      @apply flex slg:hidden flex-col gap-[2vw] pt-[8vw] text-[20px] px-[1.2em];
       .profit-list-container {
         @apply flex w-full;
         .history {
