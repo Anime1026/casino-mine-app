@@ -54,8 +54,8 @@ const setSessionStore = (state: any) => {
 const initialState: StoreObject = {
   auth: {
     userid: '',
-    name: '',
-    img: '',
+    username: '',
+    avatar: '',
     balance: 0
   },
   loading: false

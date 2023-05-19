@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import uniqid from 'uniqid';
+import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import { toast } from 'react-toastify';
 import Card from '../../components/Card';
 import MineBox from '../../components/MineBox';
 import AmountBox from '../../components/AmountBox';
@@ -13,20 +14,22 @@ import GridIcon from '../../assets/images/grid_icon.svg';
 import CricketIcon from '../../assets/images/cricket_icon.svg';
 import useStore from '../../useStore';
 import { config } from '../../config/global.const';
-import { postRequest } from '../../service';
 import './gamemanager.scss';
 
+let loop = 0;
 const socket = io(config.wwsHost as string);
 const GameManager = () => {
-  /* redux variable and function */
+  /* common variable and function */
   const { auth, update } = useStore();
+  const token = new URLSearchParams(useLocation().search).get('cert');
+  const [, setIsLoading] = useState(false);
   /* variables for game setting */
   const [totalValue, setTotalValue] = useState(auth?.balance);
   const [gridCount, setGridCount] = useState<number>(5);
   const [turboMode, setTurboMode] = useState<boolean>(false);
   const [turboModeStart, setTurboModeStart] = useState<boolean>(false);
   const [betAmount, setBetAmount] = useState<number>(1);
-  const [mineCount, setMineCount] = useState<number>(1);
+  const [mineCount, setMineCount] = useState<number>(3);
   const [gridDataList, setGridDataList] = useState([]);
   const [gridSettingList, setGridSettingList] = useState([
     { label: '3X3', grid: 3, active: false },
@@ -55,29 +58,46 @@ const GameManager = () => {
   const [currentTarget, setCurrentTarget] = useState<number>(-1);
   const [btnActionStatus, setBtnActionStatus] = useState<string>('start');
 
-  /* function for make user */
-  const makeNewUser = () => {
-    let data = {
-      name: uniqid(),
-      img: uniqid(),
-      balance: 1000
-    };
-    postRequest(`/register`, data).then((res: any) => {
-      if (res.status) {
-        update({ auth: { ...res.data } } as StoreObject);
-        setTotalValue(1000);
-      }
-    });
-  };
   /* function for create or join on room */
   useEffect(() => {
-    if (!auth || !auth?.balance || Number(auth?.balance) <= 0) makeNewUser();
-    socket.emit('join', auth);
+    setIsLoading(true);
+    socket.emit('join', { token });
+
+    socket.on(`join-${token}`, (e: any) => {
+      update({
+        auth: {
+          userid: e.userid,
+          username: e.username,
+          avatar: e.avatar,
+          balance: e.balance
+        }
+      } as StoreObject);
+      initializeGridSystem(gridCount);
+      setTotalValue(e.balance);
+      socket.emit('setProfitCalcList', { userid: e.userid, mineCount, gridCount });
+      setIsLoading(false);
+    });
+
     return () => {
       socket.off('join');
+      socket.off(`join-${token}`);
     };
     // eslint-disable-next-line
-  }, [auth]);
+  }, []);
+  /* function for set profit calculate list according to mine count, turboMode and grid count */
+  useEffect(() => {
+    if (loop > 0) {
+      setTurboList([]);
+      setProfitCalcPage(0);
+      setCurrentProfitInd(0);
+      initializeGridSystem(gridCount);
+      socket.emit('setProfitCalcList', { userid: auth?.userid, mineCount, gridCount });
+    }
+    return () => {
+      socket.off('setProfitCalcList');
+    };
+    // eslint-disable-next-line
+  }, [mineCount, turboMode, gridCount]);
   /* function for initialize cards */
   const initializeGridSystem = (count: number) => {
     let data: any = [];
@@ -97,7 +117,7 @@ const GameManager = () => {
       setGridSettingList(data);
       setGridCount(count);
     } else {
-      alert('Undefined user');
+      toast.error('Undefined user');
     }
   };
   /* function for submit card */
@@ -142,13 +162,13 @@ const GameManager = () => {
         socket.emit('checkMine', { userid: auth?.userid, order });
       }
     } else {
-      alert('Undefined user');
+      toast.error('Undefined user');
     }
   };
   /* function for initialize when play bet */
   const initializeStartCase = (turboMode: boolean) => {
     if (turboMode && turboList.length === 0) {
-      alert('Please select the card');
+      toast.warning('Please select the card');
       return false;
     }
     if (turboModeStart) return false;
@@ -207,7 +227,7 @@ const GameManager = () => {
           break;
       }
     } else {
-      alert('Undefined user');
+      toast.error('Undefined user');
     }
   };
   /* function for set mint count according to grid count */
@@ -227,18 +247,7 @@ const GameManager = () => {
         break;
     }
   }, [gridCount]);
-  /* function for set profit calculate list according to mine count, turboMode and grid count */
-  useEffect(() => {
-    setTurboList([]);
-    setProfitCalcPage(0);
-    setCurrentProfitInd(0);
-    initializeGridSystem(gridCount);
-    socket.emit('setProfitCalcList', { userid: auth?.userid, mineCount, gridCount });
-    return () => {
-      socket.off('setProfitCalcList');
-    };
-    // eslint-disable-next-line
-  }, [mineCount, turboMode, gridCount]);
+
   /* function for get profitCalcTextList according to profit page */
   useEffect(() => {
     setCurrentProfitCalcTextList(profitCalcTextList.slice(maxCount * profitCalcPage, maxCount * (profitCalcPage + 1)));
@@ -383,9 +392,10 @@ const GameManager = () => {
       });
       setProfitCalcTextList(data);
       setCurrentProfitCalcTextList(data.slice(maxCount * profitCalcPage, maxCount * (profitCalcPage + 1)));
+      loop = loop + 1;
     });
     socket.on(`error-${auth?.userid}`, async (e) => {
-      alert(e);
+      toast.error(e);
     });
     return () => {
       socket.off(`playBet-${auth?.userid}`);

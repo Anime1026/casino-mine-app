@@ -11,8 +11,8 @@ declare module '*.svg' {
 declare interface StoreObject {
   auth?: {
     userid: string;
-    name: string;
-    img: string;
+    username: string;
+    avatar: string;
     balance: number;
   };
   loading: boolean;
