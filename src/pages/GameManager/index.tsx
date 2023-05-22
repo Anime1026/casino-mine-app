@@ -188,9 +188,12 @@ const GameManager = () => {
   const refund = () => {
     socket.emit('refund', { userid: auth?.userid });
   };
-
   /* function for submit play bet, cancel and cashout */
   const handleBetButton = () => {
+    if (Number(totalValue) - betAmount <= 0) {
+      setDepositModalOpen(true);
+      return;
+    }
     if (loading || cardLoading) return;
     if (auth) {
       switch (btnActionStatus) {
@@ -254,7 +257,6 @@ const GameManager = () => {
         break;
     }
   }, [gridCount]);
-
   /* function for get profitCalcTextList according to profit page */
   useEffect(() => {
     setCurrentProfitCalcTextList(profitCalcTextList.slice(maxCount * profitCalcPage, maxCount * (profitCalcPage + 1)));
@@ -412,6 +414,13 @@ const GameManager = () => {
       toast.success('Balance Refunded');
     });
     socket.on(`insufficient-${auth?.userid}`, async () => {
+      update({
+        auth: {
+          ...auth,
+          balance: 0
+        }
+      } as StoreObject);
+      setTotalValue(0);
       setDepositModalOpen(true);
     });
     socket.on(`error-${auth?.userid}`, async (e) => {
