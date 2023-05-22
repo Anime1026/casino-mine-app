@@ -52,6 +52,7 @@ const GameManager = () => {
   /* variables for control the modal */
   const [resultModalOpen, setResultModalOpen] = useState<boolean>(false);
   const [settingModalOpen, setSettingModalOpen] = useState<boolean>(false);
+  const [depositModalOpen, setDepositModalOpen] = useState<boolean>(false);
   /* assistant variables for control the game */
   const [loading, setLoading] = useState<boolean>(false);
   const [playStatus, setPlayStatus] = useState<boolean>(false);
@@ -410,6 +411,9 @@ const GameManager = () => {
       setTotalValue(0);
       toast.success('Balance Refunded');
     });
+    socket.on(`insufficient-${auth?.userid}`, async () => {
+      setDepositModalOpen(true);
+    });
     socket.on(`error-${auth?.userid}`, async (e) => {
       toast.error(e);
     });
@@ -420,6 +424,7 @@ const GameManager = () => {
       socket.off(`checkMine-${auth?.userid}`);
       socket.off(`setProfitCalcList-${auth?.userid}`);
       socket.off(`refund-${auth?.userid}`);
+      socket.off(`insufficient-${auth?.userid}`);
       socket.off(`error-${auth?.userid}`);
     };
     // eslint-disable-next-line
@@ -741,6 +746,19 @@ const GameManager = () => {
               setValue={(e: number) => !playStatus && setBetAmount(e)}
               playStatus={playStatus}
             />
+          </div>
+        </div>
+      </Modal>
+      <Modal open={depositModalOpen} setOpen={setDepositModalOpen}>
+        <div className="game-deposit-modal">
+          <div className="modal-close" onClick={() => setDepositModalOpen(false)}>
+            &times;
+          </div>
+          <div>
+            <p>Insufficient account balance</p>
+            <a href="http://annie.ihk.vipnps.vip/iGaming-web/#/pages/recharge/recharge">
+              http://annie.ihk.vipnps.vip/iGaming-web/#/pages/recharge/recharge
+            </a>
           </div>
         </div>
       </Modal>
