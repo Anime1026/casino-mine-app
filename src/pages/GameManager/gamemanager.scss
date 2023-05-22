@@ -1,9 +1,14 @@
 .game-management-layout {
   @apply flex justify-center items-center relative;
 
+  .refund-btn {
+    @apply flex items-center gap-[10px] text-white hover:text-[#d5dceb] absolute top-[20px] left-[20px] z-[200];
+  }
+
   .game-landscape-top {
-    @apply flex items-center justify-between slg:justify-center gap-[1em] w-full h-[5em] px-[1em] absolute top-0 right-0 left-0 z-[100]
+    @apply flex items-center justify-between slg:justify-center gap-[1em] w-full h-[5em] px-[1em] absolute top-[20px] right-0 left-0 z-[100]
     text-[20px] xl:text-[24px] 2xl:text-[28px];
+
     .logo-container {
       background-image: url("../../assets/images/logo.webp");
       @apply w-[7em] h-[3.125em] bg-[50%] bg-no-repeat bg-contain text-[28px];

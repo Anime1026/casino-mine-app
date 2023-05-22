@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
+import IconMenu from '../../components/Icons';
 import Card from '../../components/Card';
 import MineBox from '../../components/MineBox';
 import AmountBox from '../../components/AmountBox';
@@ -182,6 +183,11 @@ const GameManager = () => {
     setCurrentTarget(-1);
     return true;
   };
+  /* function for reroud balance */
+  const refund = () => {
+    socket.emit('refund', { userid: auth?.userid });
+  };
+
   /* function for submit play bet, cancel and cashout */
   const handleBetButton = () => {
     if (loading || cardLoading) return;
@@ -394,6 +400,16 @@ const GameManager = () => {
       setCurrentProfitCalcTextList(data.slice(maxCount * profitCalcPage, maxCount * (profitCalcPage + 1)));
       loop = loop + 1;
     });
+    socket.on(`refund-${auth?.userid}`, async (e: any) => {
+      update({
+        auth: {
+          ...auth,
+          balance: 0
+        }
+      } as StoreObject);
+      setTotalValue(0);
+      toast.success('Balance Refunded');
+    });
     socket.on(`error-${auth?.userid}`, async (e) => {
       toast.error(e);
     });
@@ -403,6 +419,7 @@ const GameManager = () => {
       socket.off(`cashOut-${auth?.userid}`);
       socket.off(`checkMine-${auth?.userid}`);
       socket.off(`setProfitCalcList-${auth?.userid}`);
+      socket.off(`refund-${auth?.userid}`);
       socket.off(`error-${auth?.userid}`);
     };
     // eslint-disable-next-line
@@ -436,6 +453,10 @@ const GameManager = () => {
   return (
     <>
       <div className="game-management-layout">
+        <button className="refund-btn" onClick={refund}>
+          <IconMenu icon="Back" size={30} />
+          <span>Refund</span>
+        </button>
         <div className="game-landscape-top">
           <div className="logo-container" />
           <div className="profit-list-container">
