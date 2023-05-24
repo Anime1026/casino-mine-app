@@ -161,7 +161,7 @@ const GameManager = () => {
         if (!playStatus || cardLoading) return;
         setCardLoading(true);
         setCurrentTarget(order);
-        socket.emit('checkMine', { userid: auth?.userid, order });
+        socket.emit('checkMine', { userid: auth?.userid, order, betAmount });
       }
     } else {
       toast.error('Undefined user');
@@ -190,10 +190,6 @@ const GameManager = () => {
   };
   /* function for submit play bet, cancel and cashout */
   const handleBetButton = () => {
-    if (Number(totalValue) - betAmount <= 0) {
-      setDepositModalOpen(true);
-      return;
-    }
     if (loading || cardLoading) return;
     if (auth) {
       switch (btnActionStatus) {
