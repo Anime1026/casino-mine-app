@@ -220,6 +220,7 @@ const GameManager = () => {
           setTimeout(() => {
             socket.emit('cashOut', {
               userid: auth?.userid,
+              betAmount,
               profitValue:
                 profitCalcList[
                   maxCount * profitCalcPage + profitCalcPage > 0
@@ -433,7 +434,7 @@ const GameManager = () => {
       socket.off(`error-${auth?.userid}`);
     };
     // eslint-disable-next-line
-  }, [gridDataList]);
+  }, [auth, gridDataList]);
 
   const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
