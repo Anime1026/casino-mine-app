@@ -25,7 +25,7 @@ const GameManager = () => {
   const token = new URLSearchParams(useLocation().search).get('cert');
   const [, setIsLoading] = useState(false);
   /* variables for game setting */
-  const [totalValue, setTotalValue] = useState(auth?.balance);
+  const [totalValue, setTotalValue] = useState<number>(Number(auth?.balance));
   const [gridCount, setGridCount] = useState<number>(5);
   const [turboMode, setTurboMode] = useState<boolean>(false);
   const [turboModeStart, setTurboModeStart] = useState<boolean>(false);
@@ -75,7 +75,7 @@ const GameManager = () => {
         }
       } as StoreObject);
       initializeGridSystem(gridCount);
-      setTotalValue(e.balance);
+      setTotalValue(Number(e.balance));
       socket.emit('setProfitCalcList', { userid: e.userid, mineCount, gridCount });
       setIsLoading(false);
     });
@@ -315,18 +315,18 @@ const GameManager = () => {
         setBtnActionStatus('cancel');
       }
       update({ auth: { ...auth, balance: e.balance } } as StoreObject);
-      setTotalValue(e.balance);
+      setTotalValue(Number(e.balance));
     });
     socket.on(`cancelBet-${auth?.userid}`, async (e) => {
       update({ auth: { ...auth, balance: e.balance } } as StoreObject);
-      setTotalValue(e.balance);
+      setTotalValue(Number(e.balance));
       setLoading(false);
       setPlayStatus(false);
       setBtnActionStatus('start');
     });
     socket.on(`cashOut-${auth?.userid}`, async (e) => {
       update({ auth: { ...auth, balance: e.balance } } as StoreObject);
-      setTotalValue(e.balance);
+      setTotalValue(Number(e.balance));
       setResultModalOpen(true);
       setLoading(false);
       setPlayStatus(false);
@@ -409,6 +409,9 @@ const GameManager = () => {
       } as StoreObject);
       setTotalValue(0);
       toast.success('Balance Refunded');
+      setTimeout(() => {
+        window.location.href = 'http://annie.ihk.vipnps.vip/iGaming-web';
+      }, 1500);
     });
     socket.on(`insufficient-${auth?.userid}`, async () => {
       update({
@@ -422,6 +425,7 @@ const GameManager = () => {
     });
     socket.on(`error-${auth?.userid}`, async (e) => {
       toast.error(e);
+      setLoading(false);
     });
     return () => {
       socket.off(`playBet-${auth?.userid}`);
@@ -613,7 +617,7 @@ const GameManager = () => {
                 minLimit={0.1}
                 maxLimit={100}
                 value={betAmount}
-                setValue={(e: number) => !playStatus && setBetAmount(e)}
+                setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
                 playStatus={playStatus}
               />
             </div>
@@ -664,7 +668,7 @@ const GameManager = () => {
                 minLimit={0.1}
                 maxLimit={100}
                 value={betAmount}
-                setValue={(e: number) => !playStatus && setBetAmount(e)}
+                setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
                 playStatus={playStatus}
               />
             </div>
@@ -749,7 +753,7 @@ const GameManager = () => {
               minLimit={0.1}
               maxLimit={100}
               value={betAmount}
-              setValue={(e: number) => !playStatus && setBetAmount(e)}
+              setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
               playStatus={playStatus}
             />
           </div>
