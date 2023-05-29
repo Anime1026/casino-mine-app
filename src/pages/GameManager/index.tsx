@@ -29,7 +29,7 @@ const GameManager = () => {
   const [gridCount, setGridCount] = useState<number>(5);
   const [turboMode, setTurboMode] = useState<boolean>(false);
   const [turboModeStart, setTurboModeStart] = useState<boolean>(false);
-  const [betAmount, setBetAmount] = useState<number>(1);
+  const [betAmount, setBetAmount] = useState<number>(10);
   const [mineCount, setMineCount] = useState<number>(3);
   const [gridDataList, setGridDataList] = useState([]);
   const [gridSettingList, setGridSettingList] = useState([
@@ -161,7 +161,7 @@ const GameManager = () => {
         if (!playStatus || cardLoading) return;
         setCardLoading(true);
         setCurrentTarget(order);
-        socket.emit('checkMine', { userid: auth?.userid, order, betAmount });
+        socket.emit('checkMine', { userid: auth?.userid, order, betAmount: betAmount * 100 });
       }
     } else {
       toast.error('Undefined user');
@@ -199,7 +199,7 @@ const GameManager = () => {
             setTimeout(() => {
               socket.emit('playBet', {
                 userid: auth?.userid,
-                betAmount,
+                betAmount: betAmount * 100,
                 gridCount,
                 mineCount,
                 turboMode,
@@ -212,7 +212,7 @@ const GameManager = () => {
         case 'cancel':
           setLoading(true);
           setTimeout(() => {
-            socket.emit('cancelBet', { userid: auth?.userid, betAmount });
+            socket.emit('cancelBet', { userid: auth?.userid, betAmount: betAmount * 100, });
           }, 500);
           break;
         case 'cashOut':
@@ -512,7 +512,7 @@ const GameManager = () => {
           <div className="balance-container">
             <label>Balance</label>
             <div className="balance">
-              <span>${totalValue?.toFixed(2)}</span>
+              <span>₹{(totalValue / 100).toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -703,8 +703,8 @@ const GameManager = () => {
           <div className={`win_img ${currentProfit >= 10 ? '_win3' : currentProfit >= 2 ? '_win2' : '_win1'}`} />
           <div className="win-info-detail">
             <div className="win-amount">
-              <p>${betAmount * currentProfit}</p>
-              <span>${betAmount * currentProfit}</span>
+              <p>₹{betAmount * currentProfit}</p>
+              <span>₹{betAmount * currentProfit}</span>
             </div>
             <div className="win-amount-double">
               <p>X{currentProfit}</p>
