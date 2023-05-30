@@ -23,7 +23,7 @@ const GameManager = () => {
   /* common variable and function */
   const { auth, update } = useStore();
   const token = new URLSearchParams(useLocation().search).get('cert');
-  const [, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   /* variables for game setting */
   const [totalValue, setTotalValue] = useState<number>(Number(auth?.balance));
   const [gridCount, setGridCount] = useState<number>(5);
@@ -186,7 +186,12 @@ const GameManager = () => {
   };
   /* function for reroud balance */
   const refund = () => {
-    socket.emit('refund', { userid: auth?.userid });
+    if (!isLoading) {
+      setIsLoading(true);
+      socket.emit('refund', { userid: auth?.userid });
+    } else {
+      toast.error('Refund is loading...')
+    }
   };
   /* function for submit play bet, cancel and cashout */
   const handleBetButton = () => {
@@ -410,6 +415,7 @@ const GameManager = () => {
       setTotalValue(0);
       toast.success('Balance Refunded');
       setTimeout(() => {
+        setIsLoading(false);
         window.location.href = 'http://annie.ihk.vipnps.vip/iGaming-web';
       }, 1500);
     });
