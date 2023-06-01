@@ -13,6 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<GameManager />} />
+          <Route path="*" element={<GameManager />} />
         </Routes>
       </BrowserRouter>
     </Provider>
