@@ -43,6 +43,82 @@ const icons = {
         fill="currentColor"
       />
     </svg>
+  ),
+  LeftArr: (
+    <svg viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line
+        x1="0.75"
+        y1="-0.75"
+        x2="7.65232"
+        y2="-0.75"
+        transform="matrix(-0.712358 0.701816 -0.709083 -0.705125 6.91455 0.457031)"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <line
+        x1="0.75"
+        y1="-0.75"
+        x2="7.81536"
+        y2="-0.75"
+        transform="matrix(-0.718058 -0.695983 0.703523 -0.710672 7.89404 11.5767)"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  RightArr: (
+    <svg viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line
+        x1="0.75"
+        y1="-0.75"
+        x2="7.64532"
+        y2="-0.75"
+        transform="matrix(0.712358 -0.701816 0.709083 0.705125 1.24463 12.5967)"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <line
+        x1="0.75"
+        y1="-0.75"
+        x2="7.80841"
+        y2="-0.75"
+        transform="matrix(0.718641 0.695381 -0.704118 0.710083 0.265625 1.49463)"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  Dropdown: (
+    <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line
+        x1="1.41415"
+        y1="1.25378"
+        x2="7.61406"
+        y2="7.48262"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <line
+        x1="14.3672"
+        y1="1.41414"
+        x2="8.07151"
+        y2="7.84132"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 } as { [key: string]: JSX.Element };
 
