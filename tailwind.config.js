@@ -38,7 +38,8 @@ module.exports = {
       colors: {
         yellow: '#ffc020',
         blue: '#0094ff',
-        green: '#0f6'
+        green: '#0f6',
+        gray: '#5f6368'
       },
       container: {
         center: true
