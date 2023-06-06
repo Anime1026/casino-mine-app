@@ -209,7 +209,7 @@
   .game-landscape-left {
     background: url("../../assets/images/action_bg.svg");
     @apply hidden slg:flex flex-col justify-center items-center gap-[4em] bg-center bg-no-repeat bg-contain
-    fixed left-[2%] lg:left-[4%] 2xl:left-[7%] 3xl:left-[10%] bottom-[6%] p-[50px_20px_10px];
+    absolute left-[2%] lg:left-[4%] 2xl:left-[7%] 3xl:left-[10%] bottom-[6%] p-[50px_20px_10px];
     .wickets-control-group, .amount-control-group {
       @apply flex flex-col justify-center items-center gap-[10px];
       label {
@@ -226,7 +226,7 @@
   .game-landscape-right {
     background: url("../../assets/images/action_bg.svg");
     @apply hidden slg:flex flex-col justify-center items-center gap-[4em] bg-center bg-no-repeat bg-contain
-    fixed right-[2%] lg:right-[4%] 2xl:right-[7%] 3xl:right-[10%] bottom-[6%] p-[50px_20px_10px];
+    absolute right-[2%] lg:right-[4%] 2xl:right-[7%] 3xl:right-[10%] bottom-[6%] p-[50px_20px_10px];
     .turbo-control-group {
       @apply flex flex-col justify-center items-center gap-[10px];
       label {
@@ -239,6 +239,22 @@
       @apply text-[16px] lg:text-[18px] xl:text-[24px] 2xl:text-[26px] 3xl:text-[28px];
     }
   }
+}
+
+.game-history-layout {
+  @apply flex flex-col gap-[10px] items-center w-full pt-[50px];
+  .game-play-way-tab {
+    @apply flex w-[85%] lg:w-[70%];
+    > div {
+      @apply flex justify-start gap-[10px] bg-[#0f212e] p-[4px] sm:p-[6px] rounded-full min-w-[200px] sm:min-w-[300px];
+      > button {
+        @apply w-full text-white py-[4px] sm:py-[8px] text-[12px] sm:text-[14px] font-[600];
+      }
+      ._active {
+        @apply bg-[#2c3b54] rounded-full;
+      }
+    }
+}
 }
 
 .game-result-modal {

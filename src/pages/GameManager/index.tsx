@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
+import moment from 'moment';
 import IconMenu from '../../components/Icons';
 import Card from '../../components/Card';
 import MineBox from '../../components/MineBox';
@@ -11,6 +12,7 @@ import ToggleBox from '../../components/ToggleBox';
 import ProfitBox from '../../components/ProfitBox';
 import SettingBtn from '../../components/SettingBtn';
 import Modal from '../../components/Modal';
+import Table from '../../components/Table';
 import GridIcon from '../../assets/images/grid_icon.svg';
 import CricketIcon from '../../assets/images/cricket_icon.svg';
 import useStore from '../../useStore';
@@ -18,6 +20,61 @@ import { config } from '../../config/global.const';
 import './gamemanager.scss';
 
 let loop = 0;
+
+const heading: THTypeInterface[] = [
+  {
+    key: 'userid',
+    value: 'User',
+    type: 'text',
+    minWidth: '100px',
+    width: '10%',
+    align: 'start'
+  },
+  {
+    key: 'time',
+    value: 'Time',
+    type: 'text',
+    minWidth: '160px',
+    width: '25%',
+    align: 'start'
+  },
+  {
+    key: 'bet_amount',
+    value: 'BetAmount',
+    type: 'text',
+    minWidth: '120px',
+    width: '15%',
+    align: 'start'
+  },
+  {
+    key: 'multiplier',
+    value: 'Multiplier',
+    type: 'text',
+    minWidth: '120px',
+    width: '15%',
+    align: 'start'
+  },
+  {
+    key: 'payout',
+    value: 'Payout',
+    type: 'text',
+    minWidth: '120px',
+    width: '15%',
+    align: 'start'
+  },
+  {
+    key: 'status',
+    value: 'Status',
+    type: 'button',
+    minWidth: '100px',
+    width: '10%',
+    align: 'center'
+  }
+];
+const tableStyle: TStyleInterface = {
+  tableMaxHeight: 'max-h-[800px]'
+};
+
 const socket = io(config.wwsHost as string);
 const GameManager = () => {
   /* common variable and function */
@@ -59,6 +116,12 @@ const GameManager = () => {
   const [cardLoading, setCardLoading] = useState<boolean>(false);
   const [currentTarget, setCurrentTarget] = useState<number>(-1);
   const [btnActionStatus, setBtnActionStatus] = useState<string>('start');
+  /* variables for control the table */
+  const [historyData, setHistoryData] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [historyWay, setHistoryWay] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [displayCount, setDisplayCount] = useState(10);
 
   /* function for create or join on room */
   useEffect(() => {
@@ -190,7 +253,7 @@ const GameManager = () => {
       setIsLoading(true);
       socket.emit('refund', { userid: auth?.userid });
     } else {
-      toast.error('Refund is loading...')
+      toast.error('Refund is loading...');
     }
   };
   /* function for submit play bet, cancel and cashout */
@@ -217,7 +280,7 @@ const GameManager = () => {
         case 'cancel':
           setLoading(true);
           setTimeout(() => {
-            socket.emit('cancelBet', { userid: auth?.userid, betAmount: betAmount * 100, });
+            socket.emit('cancelBet', { userid: auth?.userid, betAmount: betAmount * 100 });
           }, 500);
           break;
         case 'cashOut':
@@ -225,7 +288,7 @@ const GameManager = () => {
           setTimeout(() => {
             socket.emit('cashOut', {
               userid: auth?.userid,
-              betAmount,
+              betAmount: betAmount * 100,
               profitValue:
                 profitCalcList[
                   maxCount * profitCalcPage + profitCalcPage > 0
@@ -313,6 +376,7 @@ const GameManager = () => {
         setResultModalOpen(false);
         setPlayStatus(false);
         setBtnActionStatus('start');
+        getHistory();
       } else {
         setLoading(false);
         setCardLoading(false);
@@ -341,6 +405,7 @@ const GameManager = () => {
         setCurrentProfitInd(0);
         setProfitCalcPage(0);
         setResultModalOpen(false);
+        getHistory();
       }, 2000);
     });
     socket.on(`checkMine-${auth?.userid}`, async (e) => {
@@ -362,6 +427,7 @@ const GameManager = () => {
           initializeGridSystem(gridCount);
           setProfitCalcPage(0);
           setCurrentProfitInd(0);
+          getHistory();
         }, 2000);
       } else {
         data[e.index].mine = e.mine;
@@ -429,8 +495,23 @@ const GameManager = () => {
       setTotalValue(0);
       setDepositModalOpen(true);
     });
+    socket.on(`getHistory-${auth?.userid}`, async (e: any) => {
+      let data = e.data.map((item: any) => {
+        return {
+          userid: item.userid,
+          time: moment(new Date(item.date * 1000)).format('MM/DD/YYYY - h:mm:ss a'),
+          bet_amount: (item.betAmount / 100).toFixed(2),
+          multiplier: item.profit.toFixed(2),
+          payout: (item.profitAmount / 100).toFixed(2),
+          status: item.profit
+        };
+      });
+      setTotalCount(e.total);
+      setHistoryData(data);
+    });
     socket.on(`error-${auth?.userid}`, async (e) => {
       toast.error(e);
+      initializeStartCase(turboMode);
       setLoading(false);
     });
     return () => {
@@ -441,10 +522,24 @@ const GameManager = () => {
       socket.off(`setProfitCalcList-${auth?.userid}`);
       socket.off(`refund-${auth?.userid}`);
       socket.off(`insufficient-${auth?.userid}`);
+      socket.off(`getHistory-${auth?.userid}`);
       socket.off(`error-${auth?.userid}`);
     };
     // eslint-disable-next-line
   }, [auth, gridDataList]);
+  /* function for get game history */
+  const getHistory = () => {
+    socket.emit('getHistory', {
+      userid: auth?.userid,
+      historyWay: historyWay ? 'all' : 'mine',
+      currentPage,
+      displayCount
+    });
+  };
+  useEffect(() => {
+    getHistory();
+    // eslint-disable-next-line
+  }, [auth, historyWay, currentPage, displayCount]);
 
   const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -702,6 +797,32 @@ const GameManager = () => {
               type={btnActionStatus}
             />
           </div>
+        </div>
+      </div>
+      <div className="game-history-layout">
+        <div className="game-play-way-tab">
+          <div>
+            <button className={!historyWay ? '_active' : ''} onClick={() => setHistoryWay(false)}>
+              My Bets
+            </button>
+            <button className={historyWay ? '_active' : ''} onClick={() => setHistoryWay(true)}>
+              All Bets
+            </button>
+          </div>
+        </div>
+        <div className="w-[85%] lg:w-[70%]">
+          <Table
+            data={{
+              thead: heading,
+              tbody: historyData,
+              style: tableStyle
+            }}
+            totalCount={totalCount}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            displayCount={displayCount}
+            setDisplayCount={setDisplayCount}
+          />
         </div>
       </div>
       <Modal open={resultModalOpen} setOpen={setResultModalOpen}>
