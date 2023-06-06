@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
@@ -47,8 +48,8 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
     "axios": "^1.4.0",
-    "sass": "^1.62.1",
     "prettier": "^2.8.8",
+    "sass": "^1.62.1",
     "socket.io-client": "^4.6.1",
     "tailwindcss": "^3.3.2"
   },
