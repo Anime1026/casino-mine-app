@@ -38,7 +38,7 @@ const Card = ({
         {turboMode ? (
           !active && turboList.indexOf(self) >= 0 && <span className="turbo-mark">?</span>
         ) : (
-          <span className="target-item-sum">${currentProfitAmount}</span>
+          <span className="target-item-sum">${currentProfitAmount.toFixed(2)}</span>
         )}
       </div>
       {!active && <div className="_shadow" />}
