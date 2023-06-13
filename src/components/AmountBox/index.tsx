@@ -34,7 +34,7 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
           <div className="amount-landscape">
             <div className="amount-landscape-inner">
               <div className="amount-landscape-center">
-                <input type="text" name="amount" value={`$ ${value}`} readOnly disabled={playStatus} />
+                <input type="text" name="amount" value={`₹ ${value}`} readOnly disabled={playStatus} />
               </div>
               <div className="amount-landscape-btn-group">
                 <div className="amount-landscape-btn top-left" onClick={handleMax}>
@@ -69,7 +69,7 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
                 </div>
               </div>
               <div className="mobile-amount-input">
-                <input type="text" name="amount" value={`$ ${value}`} readOnly disabled={playStatus} />
+                <input type="text" name="amount" value={`₹ ${value}`} readOnly disabled={playStatus} />
               </div>
               <div className="mobile-amount-btns">
                 <div className="mobile-amount-btns-inner">
@@ -88,7 +88,7 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
         isMobile === 'modal' && (
           <div className={`modal-amount-box ${playStatus && 'pointer-events-none'}`}>
             <div className="modal-amount-input">
-              <input type="text" name="amount" value={`$ ${value}`} readOnly disabled={playStatus} />
+              <input type="text" name="amount" value={`₹ ${value}`} readOnly disabled={playStatus} />
             </div>
             <div className="modal-amount-input-btn" onClick={handleMin}>
               <div className="modal-amount-input-btn-inner">min</div>

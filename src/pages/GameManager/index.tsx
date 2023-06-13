@@ -715,8 +715,8 @@ const GameManager = () => {
             <div className="amount-controller">
               <AmountBox
                 isMobile="mobile"
-                minLimit={0.1}
-                maxLimit={100}
+                minLimit={10}
+                maxLimit={1000}
                 value={betAmount}
                 setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
                 playStatus={playStatus}
@@ -766,8 +766,8 @@ const GameManager = () => {
             <div className="amount-control-action">
               <AmountBox
                 isMobile="desktop"
-                minLimit={0.1}
-                maxLimit={100}
+                minLimit={10}
+                maxLimit={1000}
                 value={betAmount}
                 setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
                 playStatus={playStatus}
@@ -877,8 +877,8 @@ const GameManager = () => {
             <label>Bet Amount</label>
             <AmountBox
               isMobile="modal"
-              minLimit={0.1}
-              maxLimit={100}
+              minLimit={10}
+              maxLimit={1000}
               value={betAmount}
               setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
               playStatus={playStatus}
