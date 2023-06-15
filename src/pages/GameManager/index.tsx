@@ -262,6 +262,10 @@ const GameManager = () => {
     if (auth) {
       switch (btnActionStatus) {
         case 'start':
+          if (totalValue - betAmount <= 0) {
+            toast.error('Insufficient your balance');
+            return;
+          }
           const status = initializeStartCase(turboMode);
           if (status) {
             setTimeout(() => {
