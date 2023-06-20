@@ -897,8 +897,8 @@ const GameManager = () => {
           </div>
           <div>
             <p>Insufficient account balance</p>
-            <a href="http://annie.ihk.vipnps.vip/iGaming-web/#/pages/recharge/recharge">
-              http://annie.ihk.vipnps.vip/iGaming-web/#/pages/recharge/recharge
+            <a href={process.env.REACT_APP_RECHARGE_URL}>
+              {process.env.REACT_APP_RECHARGE_URL}
             </a>
           </div>
         </div>
