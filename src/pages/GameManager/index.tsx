@@ -834,8 +834,8 @@ const GameManager = () => {
           <div className={`win_img ${currentProfit >= 10 ? '_win3' : currentProfit >= 2 ? '_win2' : '_win1'}`} />
           <div className="win-info-detail">
             <div className="win-amount">
-              <p>₹{betAmount * currentProfit}</p>
-              <span>₹{betAmount * currentProfit}</span>
+              <p>₹{(betAmount * currentProfit).toFixed(2)}</p>
+              <span>₹{(betAmount * currentProfit).toFixed(2)}</span>
             </div>
             <div className="win-amount-double">
               <p>X{currentProfit}</p>
