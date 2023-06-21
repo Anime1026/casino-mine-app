@@ -770,8 +770,8 @@ const GameManager = () => {
             <div className="amount-control-action">
               <AmountBox
                 isMobile="desktop"
-                minLimit={10}
-                maxLimit={1000}
+                minLimit={config.minBetAmount}
+                maxLimit={config.maxBetAmout}
                 value={betAmount}
                 setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
                 playStatus={playStatus}
@@ -897,9 +897,7 @@ const GameManager = () => {
           </div>
           <div>
             <p>Insufficient account balance</p>
-            <a href={process.env.REACT_APP_RECHARGE_URL}>
-              {process.env.REACT_APP_RECHARGE_URL}
-            </a>
+            <a href={process.env.REACT_APP_RECHARGE_URL}>{process.env.REACT_APP_RECHARGE_URL}</a>
           </div>
         </div>
       </Modal>
