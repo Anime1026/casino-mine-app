@@ -187,6 +187,7 @@ const GameManager = () => {
   };
   /* function for submit card */
   const checkMine = (order: number) => {
+    console.log(order);
     if (auth) {
       if (turboMode) {
         let grids: any = [...gridDataList];
