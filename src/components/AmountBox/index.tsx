@@ -4,7 +4,7 @@ import './amountbox.scss';
 const sub = (a: number, b: number, p = 8) => Math.round((a - b) * 10 ** p) / 10 ** p;
 const add = (a: number, b: number, p = 8) => Math.round((a + b) * 10 ** p) / 10 ** p;
 
-const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }: any) => {
+const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile, profitAmount }: any) => {
   const handleMax = () => {
     setValue(maxLimit);
   };
@@ -57,7 +57,10 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
         <div className={`mobile-amount-box ${playStatus && 'pointer-events-none'}`}>
           <div className="mobile-amount-controller">
             <div className="mobile-amount-inner">
-              <div className="mobile-amount-title">Bet Amount</div>
+              {playStatus ?
+                <div className="mobile-amount-title">Profit Amount</div> :
+                <div className="mobile-amount-title">Bet Amount</div>
+              }
               <div className="mobile-amount-btns">
                 <div className="mobile-amount-btns-inner">
                   <div className={`btn-left ${playStatus && '!text-white/[0.5]'}`} onClick={handleMin}>
@@ -69,7 +72,10 @@ const AmountBox = ({ minLimit, maxLimit, value, setValue, playStatus, isMobile }
                 </div>
               </div>
               <div className="mobile-amount-input">
-                <input type="text" name="amount" value={`₹ ${value}`} readOnly disabled={playStatus} />
+                {playStatus ?
+                    <input type="text" name="amount" value={`₹ ${profitAmount>0?(Number(value) * Number(profitAmount)).toFixed(2):value }`} readOnly disabled={playStatus} /> :
+                    <input type="text" name="amount" value={`₹ ${value}`} readOnly disabled={playStatus} />
+                }
               </div>
               <div className="mobile-amount-btns">
                 <div className="mobile-amount-btns-inner">

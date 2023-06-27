@@ -235,6 +235,7 @@ const GameManager = () => {
   const initializeStartCase = (turboMode: boolean) => {
     if (turboMode && turboList.length === 0) {
       toast.warning('Please select the card');
+      
       return false;
     }
     if (turboModeStart) return false;
@@ -265,6 +266,8 @@ const GameManager = () => {
         case 'start':
           if (totalValue - betAmount <= 0) {
             toast.error('Insufficient your balance');
+            setCardLoading(false);
+            setLoading(false);
             return;
           }
           const status = initializeStartCase(turboMode);
@@ -404,6 +407,7 @@ const GameManager = () => {
       setResultModalOpen(true);
       setLoading(false);
       setPlayStatus(false);
+      setCardLoading(false);
       setBtnActionStatus('start');
       setTimeout(() => {
         initializeGridSystem(gridCount);
@@ -518,6 +522,7 @@ const GameManager = () => {
       toast.error(e);
       initializeStartCase(turboMode);
       setLoading(false);
+      setCardLoading(false);
     });
     return () => {
       socket.off(`playBet-${auth?.userid}`);
@@ -532,6 +537,7 @@ const GameManager = () => {
     };
     // eslint-disable-next-line
   }, [auth, gridDataList]);
+
   /* function for get game history */
   const getHistory = () => {
     socket.emit('getHistory', {
@@ -722,6 +728,7 @@ const GameManager = () => {
                 isMobile="mobile"
                 minLimit={10}
                 maxLimit={1000}
+                profitAmount={currentProfit}
                 value={betAmount}
                 setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
                 playStatus={playStatus}
@@ -773,6 +780,7 @@ const GameManager = () => {
                 isMobile="desktop"
                 minLimit={config.minBetAmount}
                 maxLimit={config.maxBetAmout}
+                profitAmount={currentProfit}
                 value={betAmount}
                 setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
                 playStatus={playStatus}
@@ -884,6 +892,7 @@ const GameManager = () => {
               isMobile="modal"
               minLimit={10}
               maxLimit={1000}
+              profitAmount={currentProfit}
               value={betAmount}
               setValue={(e: number) => !playStatus && Number(totalValue) - e >= 0 && setBetAmount(e)}
               playStatus={playStatus}

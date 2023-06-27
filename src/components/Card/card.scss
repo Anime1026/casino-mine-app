@@ -11,20 +11,18 @@
     }
 
     .target-item-sum {
-      @apply absolute opacity-[0] text-yellow font-[600] text-[.625em] leading-[1em];
-      display: hidden!important;
-      opacity: 0!important;
+      @apply absolute text-yellow opacity-0 font-[600] text-[.625em] leading-[1em];
     }
   }
 
-  &:hover {
+  &:hover{
     @apply cursor-pointer;
     .target-item-inner {
       background-image: url("../../assets/images/item_active_box.webp");
-
-      .target-item-sum {
-        @apply block opacity-[1];
-        display: block!important;
+    }
+    .target-item-sum{
+      @media (min-width:500px) {
+        opacity: 1;
       }
     }
 

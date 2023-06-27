@@ -4,6 +4,7 @@ import CricketShadowImg from '../../assets/images/shadow.webp';
 import './betbutton.scss';
 
 const BetButton = ({ profitAmount, cardLoading, loading, type, turboMode, isMobile }: any) => {
+  console.log(cardLoading, loading);
   return (
     <>
       {isMobile ? (
