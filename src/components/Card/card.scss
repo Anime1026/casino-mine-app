@@ -11,7 +11,9 @@
     }
 
     .target-item-sum {
-      @apply hidden absolute opacity-[0] text-yellow font-[600] text-[.625em] leading-[1em];
+      @apply absolute opacity-[0] text-yellow font-[600] text-[.625em] leading-[1em];
+      display: hidden!important;
+      opacity: 0!important;
     }
   }
 
@@ -22,6 +24,7 @@
 
       .target-item-sum {
         @apply block opacity-[1];
+        display: block!important;
       }
     }
 
@@ -32,9 +35,9 @@
 
   ._win1 {
     &:before {
-      display: none;
+      display: none!important;
     }
-    background-image: url("../../assets/images/player1.webp");
+    background-image: url("../../assets/images/player1.webp")!important;
     animation: open .2s cubic-bezier(.175,.885,.32,1.275);
     @keyframes open {
       from {
@@ -50,26 +53,26 @@
 
   ._win2 {
     &:before {
-      display: none;
+      display: none!important;
     }
     animation: open .2s cubic-bezier(.175,.885,.32,1.275);
-    background-image: url("../../assets/images/player2.webp");
+    background-image: url("../../assets/images/player2.webp")!important;
   }
 
   ._win3 {
     &:before {
-      display: none;
+      display: none!important;
     }
     animation: open .2s cubic-bezier(.175,.885,.32,1.275);
-    background-image: url("../../assets/images/player3.webp");
+    background-image: url("../../assets/images/player3.webp")!important;
   }
 
   ._lose {
     &:before {
-      display: none;
+      display: none!important;
     }
     animation: open .2s cubic-bezier(.175,.885,.32,1.275);
-    background-image: url("../../assets/images/lose.webp");
+    background-image: url("../../assets/images/lose.webp")!important;
   }
 
   ._shadow {
