@@ -6,7 +6,7 @@ const ProfitBox = ({ self, value, turboMode, playStatus, currentProfit, currentP
     <div className="history-item">
       <div
         className={
-          (turboMode && currentProfitInd - 1 === self) || (currentProfitInd === self && playStatus)
+          (turboMode && currentProfitInd === self) || (currentProfitInd - 1 === self && playStatus)
             ? `_active ${currentProfit >= 10 ? '_win3' : currentProfit >= 2 ? '_win2' : '_win1'}`
             : ''
         }
