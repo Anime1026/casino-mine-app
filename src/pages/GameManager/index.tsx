@@ -582,7 +582,7 @@ const GameManager = () => {
       <div className="game-management-layout">
         <button className="refund-btn" onClick={refund}>
           <IconMenu icon="Back" size={30} />
-          <span>Refund</span>
+          <span>Reback</span>
         </button>
         <div className="game-landscape-top">
           <div className="logo-container" />
