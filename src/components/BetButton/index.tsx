@@ -62,7 +62,7 @@ const BetButton = ({ profitAmount, cardLoading, loading, type, turboMode, isMobi
               {type === 'cashOut' && (
                 <div className="bet-button-sum">
                   <div className="bet-button-sum-content">
-                    <span>${profitAmount}</span>
+                    <span>₹{profitAmount}</span>
                   </div>
                 </div>
               )}
